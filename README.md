@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
 
-![TestGatify Review: AI writes your test scenarios. The gate decides if they're ready. Verdicts: ACCEPT, MINOR REWORK, MAJOR REWORK](docs/banner.png)
+![TestGatify Review: AI writes your test scenarios. The gate decides if they're ready. Verdicts: ACCEPT, MINOR REWORK, MAJOR REWORK](docs/testgatify-review-banner.png)
 
 **AI writes your test scenarios. The gate decides if they're ready.**
 
