@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from ai_test_designer.loader import load_gate_config, load_requirements
-from ai_test_designer.models import RequirementSet, TestCase, TestStep, TestSuite
+from ai_test_dragon.loader import load_requirements, load_review_config
+from ai_test_dragon.models import RequirementSet, TestCase, TestStep, TestSuite
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,7 +22,7 @@ def reqs() -> RequirementSet:
 
 @pytest.fixture
 def config() -> dict:
-    return load_gate_config(ROOT / "config" / "quality_gates.yaml")
+    return load_review_config(ROOT / "config" / "review_checks.yaml")
 
 
 def make_case(

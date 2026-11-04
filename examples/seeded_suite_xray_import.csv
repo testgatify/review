@@ -1,0 +1,30 @@
+TCID,Summary,Priority,Labels,Test Category,Requirements,Precondition,Action,Data,Expected Result
+TC-001,Login with valid credentials,High,ai-generated,positive,REQ-LOGIN-01,The browser is open,Open https://www.saucedemo.com,,The login page with Username and Password fields is shown
+TC-001,,,,,,,Enter standard_user / secret_sauce and click Login,,The Products page is shown
+TC-002,Login with valid credentials as standard user,High,ai-generated,positive,REQ-LOGIN-01,The browser is open,Open https://www.saucedemo.com,,The login page is shown
+TC-002,,,,,,,Enter standard_user / secret_sauce and click Login,,The Products page is shown
+TC-003,Login with a wrong password is rejected,High,ai-generated,negative,REQ-LOGIN-01 REQ-LOGIN-02,The login page is open,Enter standard_user / wrong_password and click Login,,"The user stays on the login page and sees ""Epic sadface: Username and password do not match any user in this service"""
+TC-004,Login with an unknown username is rejected,High,ai-generated,negative,REQ-LOGIN-02,The login page is open,Enter unknown_user / secret_sauce and click Login,,"The user stays on the login page and sees ""Epic sadface: Username and password do not match any user in this service"""
+TC-005,Locked-out user cannot log in,High,ai-generated,negative,REQ-LOGIN-03,The login page is open,Enter locked_out_user / secret_sauce and click Login,,"The error ""Epic sadface: Sorry, this user has been locked out."" is shown and the Products page does not open"
+TC-006,Empty username shows a required-field error,Medium,ai-generated,boundary,REQ-LOGIN-04,The login page is open,"Leave Username empty, enter secret_sauce as the password and click Login",,"The error ""Epic sadface: Username is required"" is shown"
+TC-007,Empty password shows a required-field error,Medium,ai-generated,boundary,REQ-LOGIN-04,The login page is open,"Enter standard_user, leave Password empty and click Login",,"The error ""Epic sadface: Password is required"" is shown"
+TC-008,Products page lists six products with full details,High,ai-generated,positive,REQ-INV-01,Logged in as standard_user,Count the products on the Products page,,Exactly six products are listed
+TC-008,,,,,,,Check each product card,,"Each card shows a name, a description, a price and an ""Add to cart"" button"
+TC-009,Sort products by name Z to A,Medium,ai-generated,positive,REQ-INV-02,Logged in as standard_user,Check the sort menu without changing it,,Name (A to Z) is selected and products are in alphabetical order
+TC-009,,,,,,,Choose Name (Z to A),,Products are listed in reverse alphabetical order
+TC-010,Sort products by price in both directions,Medium,ai-generated,positive,REQ-INV-02,Logged in as standard_user,Choose Price (low to high),,Each product's price is greater than or equal to the one before it
+TC-010,,,,,,,Choose Price (high to low),,Each product's price is less than or equal to the one before it
+TC-011,Adding a product updates the cart badge and button,High,ai-generated,positive,REQ-CART-01,Logged in as standard_user; The cart is empty,"Click ""Add to cart"" on the first product",,"The cart badge shows 1 and the button changes to ""Remove"""
+TC-012,Adding all six products shows 6 on the badge,High,ai-generated,boundary,REQ-CART-01,Logged in as standard_user; The cart is empty,"Click ""Add to cart"" on all six products",,"The cart badge shows 6 and every button reads ""Remove"""
+TC-013,Removing a product from the Products page,Medium,ai-generated,positive,REQ-CART-02,Logged in as standard_user; One product is in the cart,"Click ""Remove"" on the product in the cart",,"The cart badge disappears and the button reads ""Add to cart"" again"
+TC-014,Cart page lists added products,Medium,ai-generated,positive,REQ-CART-03,Logged in as standard_user; Two products are in the cart,Click the cart icon,,"Both products are listed with quantity, name and price"
+TC-014,,,,,,,Check the buttons on the page,,"""Continue Shopping"" and ""Checkout"" buttons are shown"
+TC-015,Checkout information fields are required,High,ai-generated,negative,REQ-CHK-01,"Logged in as standard_user; One product is in the cart; On ""Checkout: Your Information""",Click Continue with all fields empty,,"""Error: First Name is required"" is shown"
+TC-015,,,,,,,Fill First Name only and click Continue,,"""Error: Last Name is required"" is shown"
+TC-015,,,,,,,Fill First Name and Last Name only and click Continue,,"""Error: Postal Code is required"" is shown"
+TC-016,Order overview total equals item total plus tax,High,ai-generated,positive,REQ-CHK-02 REQ-CART-99,Logged in as standard_user; Two products are in the cart,"Complete ""Checkout: Your Information"" and click Continue",,"""Checkout: Overview"" lists both products"
+TC-016,,,,,,,Compare Item total with the listed prices,,Item total equals the sum of the two prices
+TC-016,,,,,,,Compare Total with Item total and Tax,,Total equals Item total + Tax
+TC-017,Finishing an order empties the cart,High,ai-generated,positive,REQ-CHK-03,"Logged in as standard_user; On ""Checkout: Overview"" with one product",Click Finish,,"""Thank you for your order!"" is shown"
+TC-017,,,,,,,Look at the cart icon,,The cart badge is not shown
+TC-018,Complete checkout information continues to the overview,High,ai-generated,positive,REQ-CHK-01,"Logged in as standard_user; One product is in the cart; On ""Checkout: Your Information""",Enter Jane / Doe / 12345 and click Continue,,"""Checkout: Overview"" is shown"

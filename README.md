@@ -1,53 +1,91 @@
-# AI Test Designer
+# AI Test Dragon
 
-![A friendly QA dragon turns requirements into test cases with its magic fire; the test cases pass through a quality gate](docs/banner.png)
+![A friendly QA dragon turns requirements into test scenarios with its magic fire; the scenarios pass a static review and come out accepted](docs/banner.png)
 
-**Generate manual test cases from requirements with Claude, then check them with quality gates before anyone trusts them.**
+**AI writes test scenarios from your requirements. A static review checks them before you use them.**
 
-LLMs can draft a test suite in seconds, but the output can't be accepted blindly. It may skip a requirement, cite one that doesn't exist, repeat itself, or write steps nobody can verify. This tool treats AI-generated tests like a release candidate: it **measures** them, applies **quality gates**, and returns a **verdict**.
+Writing test scenarios by hand is slow. LLMs can draft them in seconds, but a draft can skip a requirement, cite one that doesn't exist, test only the happy path or repeat itself. AI Test Dragon does both jobs a test team needs:
+
+1. **Write.** Claude turns a requirements file into structured test scenarios: steps, expected results, priority, and links back to the requirements.
+2. **Review.** The scenarios go through a **static review**, the same checks a test manager makes in a review meeting, and get a verdict: **ACCEPT**, **MINOR REWORK** or **MAJOR REWORK**.
+3. **Export.** The scenarios come out as an **Excel** sheet for people and a **CSV for Jira Xray's Test Case Importer**, ready to load into a test management tool.
 
 ```
-requirements.yaml ──► Claude (structured JSON output) ──► suite.json ──► quality gates ──► report.md + exit code
+requirements.yaml ──► Claude writes ──► suite.json ──► static review ──► review.md + verdict
+                                            │
+                                            └──► test_cases.xlsx + xray_import.csv
 ```
 
-## Quality gates
+> **Static, not executed.** The review looks at the test design only (ISTQB: *static testing*). Nothing runs against the application, so the verdict says whether the *scenarios* are ready to use, not whether the *application* works.
 
-Each gate has a threshold. A failing **blocking** gate fails the whole suite, even when every other metric looks good, the same way one blocker defect stops a release.
+## Review checks
 
-| Gate | Default threshold | Blocking | What it catches |
+| Check | Default threshold | Severity | What it catches |
 |---|---|---|---|
-| Requirement coverage | ≥ 100% | yes | Requirements with no test case |
-| Traceability | ≥ 100% | yes | Tests that cite requirement IDs that don't exist (hallucinated links) |
-| High-priority negative coverage | ≥ 100% | yes | High-priority requirements tested only on the happy path |
-| Step completeness | ≥ 95% | yes | Steps with no action or no expected result |
-| Negative test ratio | ≥ 25% | no | Suites that are mostly happy-path tests |
-| Duplicate rate | ≤ 5% | no | Near-duplicate tests (title + steps similarity) |
+| Requirement coverage | ≥ 100% | major | Requirements with no test scenario |
+| Traceability | ≥ 100% | major | Scenarios that cite requirement IDs that don't exist (hallucinated links) |
+| High-priority negative coverage | ≥ 100% | major | High-priority requirements tested only on the happy path |
+| Step completeness | ≥ 95% | major | Steps with no action or no expected result |
+| Negative test ratio | ≥ 25% | minor | Suites that are mostly happy-path scenarios |
+| Duplicate rate | ≤ 5% | minor | Near-duplicate scenarios (title + steps similarity) |
 
-Thresholds live in [`config/quality_gates.yaml`](config/quality_gates.yaml).
+Thresholds and severities live in [`config/review_checks.yaml`](config/review_checks.yaml).
 
-Verdicts: **PASS**, **PASS_WITH_WARNINGS** (only non-blocking gates failed) or **FAIL**. `evaluate` and `run` exit with code `1` on FAIL, so the tool can gate a CI pipeline.
+## Verdicts
+
+Named after the outcomes of a review meeting:
+
+| Verdict | Meaning |
+|---|---|
+| ✅ **ACCEPT** | Every check is within its threshold. The scenarios can be used as they are. |
+| 🛠️ **MINOR REWORK** | Only minor checks failed. Usable after small fixes. |
+| ⛔ **MAJOR REWORK** | At least one major check failed. Fix and review again before use. |
+
+`review` and `run` exit with code `1` on MAJOR REWORK, so the tool can stop a CI pipeline.
 
 ## Example
 
-[`examples/seeded_suite_with_defects.json`](examples/seeded_suite_with_defects.json) is a **hand-written** suite for [SauceDemo](https://www.saucedemo.com), a public practice shop. It is not model output: it is seeded with three known defects to show what the gates catch. A missing requirement, a link to a non-existent requirement, and a duplicated test:
+[`examples/seeded_suite_with_defects.json`](examples/seeded_suite_with_defects.json) holds 18 scenarios for [SauceDemo](https://www.saucedemo.com), a public practice shop. **They are hand-written, not model output**, and seeded with three known defects to show what the review catches: a requirement with no scenario, a link to a non-existent requirement, and a duplicated scenario.
 
 ```
-$ python -m ai_test_designer evaluate --requirements requirements/saucedemo.yaml \
-      --suite examples/seeded_suite_with_defects.json --report examples/seeded_suite_report.md
-  [FAIL] requirement_coverage: 92%
-  [FAIL] traceability: 94%
-  [FAIL] high_priority_negative_coverage: 62%
-  [pass] step_completeness: 100%
-  [pass] negative_test_ratio: 39%
-  [warn] duplicate_rate: 11%
-Verdict: FAIL  (report: examples/seeded_suite_report.md)
+$ python -m ai_test_dragon review --requirements requirements/saucedemo.yaml \
+      --suite examples/seeded_suite_with_defects.json --report examples/seeded_suite_review.md
+Static review of the test design (nothing is executed):
+  [MAJOR] requirement_coverage: 92%
+  [MAJOR] traceability: 94%
+  [MAJOR] high_priority_negative_coverage: 62%
+  [  ok ] step_completeness: 100%
+  [  ok ] negative_test_ratio: 39%
+  [MINOR] duplicate_rate: 11%
+Verdict: MAJOR REWORK  (report: examples/seeded_suite_review.md)
 ```
 
-All three planted defects were caught, plus three high-priority requirements that only had happy-path tests. Full report: [`examples/seeded_suite_report.md`](examples/seeded_suite_report.md), including a requirement-to-test traceability matrix.
+All three planted defects were caught, plus three high-priority requirements that had only happy-path scenarios.
+
+| Output | File |
+|---|---|
+| Review report with a requirement-to-test traceability matrix | [`examples/seeded_suite_review.md`](examples/seeded_suite_review.md) |
+| Scenarios as an Excel sheet | [`examples/seeded_suite_test_cases.xlsx`](examples/seeded_suite_test_cases.xlsx) |
+| Scenarios as an Xray import CSV | [`examples/seeded_suite_xray_import.csv`](examples/seeded_suite_xray_import.csv) |
+
+## Importing into Jira Xray
+
+The CSV has one row per test step. Rows with the same `TCID` belong to one test; test-level fields are filled on its first row. In Xray's **Test Case Importer**, choose CSV and map the columns:
+
+| CSV column | Xray field |
+|---|---|
+| `TCID` | Test identifier (groups the steps of one test) |
+| `Summary` | Summary |
+| `Priority` | Priority |
+| `Labels` | Labels |
+| `Action` / `Data` / `Expected Result` | Manual test step: Action / Data / Expected Result |
+| `Requirements`, `Test Category`, `Precondition` | A custom field, a label, or leave unmapped |
+
+The requirement IDs in this example (`REQ-LOGIN-01`, ...) are not Jira keys. To link tests to requirement issues automatically, use the Jira issue keys as requirement IDs in your YAML file.
 
 ## Quick start
 
-Requires Python 3.10+ and an [Anthropic API key](https://console.anthropic.com/) for generation (evaluation works offline).
+Requires Python 3.10+. Writing scenarios needs an [Anthropic API key](https://console.anthropic.com/); review and export work offline.
 
 ```bash
 python -m venv .venv
@@ -56,12 +94,13 @@ pip install -e ".[dev]"
 
 export ANTHROPIC_API_KEY=...       # Windows PowerShell: $env:ANTHROPIC_API_KEY="..."
 
-# Generate a suite with Claude, then run the quality gates on it
-python -m ai_test_designer run --requirements requirements/saucedemo.yaml
+# Write, review and export in one go (results in output/)
+python -m ai_test_dragon run --requirements requirements/saucedemo.yaml
 
-# Or run the steps separately
-python -m ai_test_designer generate --requirements requirements/saucedemo.yaml --out output/suite.json
-python -m ai_test_designer evaluate --requirements requirements/saucedemo.yaml --suite output/suite.json
+# Or step by step
+python -m ai_test_dragon generate --requirements requirements/saucedemo.yaml --out output/suite.json
+python -m ai_test_dragon review   --requirements requirements/saucedemo.yaml --suite output/suite.json
+python -m ai_test_dragon export   --suite output/suite.json
 ```
 
 Run the tool's own tests (no API key needed):
@@ -72,32 +111,35 @@ pytest
 
 ## Design decisions
 
-- **Structured output, not free text.** Claude answers against a strict JSON schema, so every test case has the same fields and can be checked by code.
-- **Deterministic gates.** The checks are plain code, not another LLM call: they are cheap, reproducible and safe to run in CI. The model never grades its own work.
-- **Blocking vs. non-blocking gates.** The same trade-off a test manager makes at a go/no-go meeting: some problems stop the release, others are noted.
-- **The prompt and the gates mirror each other.** Every rule in the generation prompt ("cover every requirement", "only cite existing IDs") has a gate that verifies the model actually followed it.
-- **Testable without the API.** The generator is tested with a fake client, so the test suite runs offline and in CI.
+- **Structured output, not free text.** Claude answers against a strict JSON schema, so every scenario has the same fields and can be checked by code and exported.
+- **Deterministic review.** The checks are plain code, not another LLM call: cheap, reproducible and safe in CI. The model never grades its own work.
+- **The prompt and the review mirror each other.** Every rule given to Claude ("cover every requirement", "only cite existing IDs", "add a negative test for high-priority requirements") has a check that verifies it was followed.
+- **Major vs. minor findings.** The same call a test manager makes in a review: some findings send the work back, others are noted.
+- **Usable output.** Excel for people, Xray CSV for the test management tool, so accepted scenarios don't have to be retyped.
+- **Testable without the API.** The writer is tested with a fake client, so the 24 tests run offline and in CI.
 - **Graceful failure.** Refusals, truncated responses and schema mismatches raise clear errors instead of producing a partial suite. Server-side model fallback is enabled for declined requests.
 
 ## Project structure
 
 ```
 requirements/saucedemo.yaml       Input: requirements for the demo app
-config/quality_gates.yaml         Gate thresholds
-src/ai_test_designer/
-  generator.py                    Claude call with a JSON schema
-  quality_gates.py                Metrics and verdict
-  report.py                       Markdown report
-  cli.py                          generate / evaluate / run
-examples/                         Seeded suite and its report
+config/review_checks.yaml         Check thresholds and severities
+src/ai_test_dragon/
+  generator.py                    Claude writes the scenarios (JSON schema)
+  review_checks.py                Static review and verdict
+  report.py                       Markdown review report
+  export.py                       Excel and Xray CSV export
+  cli.py                          generate / review / export / run
+examples/                         Seeded suite, its review and exports
+docs/banner.svg                   Project illustration (source)
 tests/                            pytest suite (runs offline)
 ```
 
 ## Roadmap
 
-- LLM-as-judge for qualities code can't measure (clarity, realism of test data), reported next to the deterministic gates
-- Export test cases to Playwright skeletons and run them against SauceDemo
-- Compare prompts and models on the same requirements (an eval loop for test generation)
+- A real Claude run on the SauceDemo requirements, committed as an example
+- LLM-as-judge for qualities code can't measure (clarity, realistic test data), reported next to the static checks
+- Turn accepted scenarios into Playwright skeletons and run them against SauceDemo
 
 ## About
 

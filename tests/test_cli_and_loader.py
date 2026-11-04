@@ -2,25 +2,40 @@ from __future__ import annotations
 
 import pytest
 
-from ai_test_designer.cli import main
-from ai_test_designer.models import RequirementSet
+from ai_test_dragon.cli import main
+from ai_test_dragon.models import RequirementSet
 
 
-def test_evaluate_exits_1_on_fail_and_writes_report(root, tmp_path):
-    report = tmp_path / "report.md"
+def test_review_exits_1_on_major_rework_and_writes_report(root, tmp_path):
+    report = tmp_path / "review.md"
     code = main(
         [
-            "evaluate",
+            "review",
             "--requirements", str(root / "requirements" / "saucedemo.yaml"),
             "--suite", str(root / "examples" / "seeded_suite_with_defects.json"),
-            "--config", str(root / "config" / "quality_gates.yaml"),
+            "--config", str(root / "config" / "review_checks.yaml"),
             "--report", str(report),
         ]
     )
     assert code == 1
     text = report.read_text(encoding="utf-8")
-    assert "Verdict: ❌ FAIL" in text
+    assert "Verdict: ⛔ MAJOR REWORK" in text
+    assert "no tests were executed" in text
     assert "| REQ-NAV-01: Logout and protected pages | medium | **none** |" in text
+
+
+def test_export_command_writes_both_files(root, tmp_path):
+    xlsx, csv_file = tmp_path / "cases.xlsx", tmp_path / "xray.csv"
+    code = main(
+        [
+            "export",
+            "--suite", str(root / "examples" / "seeded_suite_with_defects.json"),
+            "--xlsx", str(xlsx),
+            "--csv", str(csv_file),
+        ]
+    )
+    assert code == 0
+    assert xlsx.exists() and csv_file.exists()
 
 
 def test_duplicate_requirement_ids_are_rejected():

@@ -1,4 +1,4 @@
-"""Read requirements, quality-gate settings and test suites from disk."""
+"""Read requirements, review settings and test suites from disk."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ def load_requirements(path: str | Path) -> RequirementSet:
     return RequirementSet.model_validate(data)
 
 
-def load_gate_config(path: str | Path) -> dict[str, Any]:
+def load_review_config(path: str | Path) -> dict[str, Any]:
     return yaml.safe_load(Path(path).read_text(encoding="utf-8"))
 
 

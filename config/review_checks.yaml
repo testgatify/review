@@ -1,0 +1,33 @@
+# Review checks for AI-written test suites.
+#
+# This is a static review of the test design (ISTQB: static testing).
+# Nothing is executed against the application.
+#
+# Each check has a threshold and a severity:
+#   - any failing "major" check  -> verdict MAJOR REWORK
+#   - only "minor" checks failing -> verdict MINOR REWORK
+#   - every check within limits  -> verdict ACCEPT
+
+checks:
+  requirement_coverage:             # share of requirements with at least one test
+    min: 1.0
+    severity: major
+  traceability:                     # share of tests that only reference real requirement IDs
+    min: 1.0
+    severity: major
+  high_priority_negative_coverage:  # high-priority requirements with a negative/boundary test
+    min: 1.0
+    severity: major
+  step_completeness:                # tests whose every step has an action and an expected result
+    min: 0.95
+    severity: major
+  negative_test_ratio:              # share of negative + boundary tests in the suite
+    min: 0.25
+    severity: minor
+  duplicate_rate:                   # share of tests that are near-duplicates of another test
+    max: 0.05
+    severity: minor
+
+# Two tests count as near-duplicates when their title + steps are at least
+# this similar (0.0 = nothing in common, 1.0 = identical).
+duplicate_similarity_threshold: 0.9

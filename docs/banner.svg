@@ -31,8 +31,8 @@
   </g>
 
   <!-- title -->
-  <text x="640" y="92" text-anchor="middle" font-size="60" font-weight="700" fill="#ffffff">AI Test Designer</text>
-  <text x="640" y="140" text-anchor="middle" font-size="24" fill="#c9d4ee">A friendly dragon drafts test cases from requirements. Quality gates keep it honest.</text>
+  <text x="640" y="92" text-anchor="middle" font-size="60" font-weight="700" fill="#ffffff">AI Test Dragon</text>
+  <text x="640" y="140" text-anchor="middle" font-size="24" fill="#c9d4ee">AI writes test scenarios from requirements. A static review checks them before you use them.</text>
 
   <!-- ground shadow -->
   <ellipse cx="240" cy="540" rx="170" ry="18" fill="#000000" opacity="0.25"/>
@@ -105,7 +105,7 @@
   </g>
 
   <!-- ===== quality gate ===== -->
-  <text x="808" y="226" text-anchor="middle" font-size="17" font-weight="700" letter-spacing="2" fill="#9fb3d9">QUALITY GATE</text>
+  <text x="808" y="226" text-anchor="middle" font-size="17" font-weight="700" letter-spacing="2" fill="#9fb3d9">STATIC REVIEW</text>
   <path d="M752 528 L 752 318 A 56 56 0 0 1 864 318 L 864 528" fill="none" stroke="#9fb3d9" stroke-width="16" stroke-linecap="round"/>
   <path d="M730 528 h 156" stroke="#9fb3d9" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
   <circle cx="808" cy="276" r="26" fill="#34c27a"/>
@@ -121,8 +121,8 @@
       <path d="M29 37 l 6 6 l 12 -13" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="68" y="31" font-weight="700" fill="#1f3864">TC-001</text>
       <text x="68" y="55" font-size="16" fill="#5b6b88">Valid login</text>
-      <rect x="226" y="24" width="60" height="26" rx="13" fill="#e3f7ec"/>
-      <text x="256" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#1f9d5b">PASS</text>
+      <rect x="208" y="24" width="78" height="26" rx="13" fill="#e3f7ec"/>
+      <text x="247" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#1f9d5b">ACCEPT</text>
     </g>
     <g transform="translate(930 352)">
       <rect width="300" height="72" rx="14" fill="#ffffff"/>
@@ -130,8 +130,8 @@
       <path d="M29 37 l 6 6 l 12 -13" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="68" y="31" font-weight="700" fill="#1f3864">TC-002</text>
       <text x="68" y="55" font-size="16" fill="#5b6b88">Locked-out user</text>
-      <rect x="226" y="24" width="60" height="26" rx="13" fill="#e3f7ec"/>
-      <text x="256" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#1f9d5b">PASS</text>
+      <rect x="208" y="24" width="78" height="26" rx="13" fill="#e3f7ec"/>
+      <text x="247" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#1f9d5b">ACCEPT</text>
     </g>
     <g transform="translate(930 442)">
       <rect width="300" height="72" rx="14" fill="#ffffff"/>
@@ -139,11 +139,11 @@
       <path d="M29 37 l 6 6 l 12 -13" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="68" y="31" font-weight="700" fill="#1f3864">TC-003</text>
       <text x="68" y="55" font-size="16" fill="#5b6b88">Checkout totals</text>
-      <rect x="226" y="24" width="60" height="26" rx="13" fill="#e3f7ec"/>
-      <text x="256" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#1f9d5b">PASS</text>
+      <rect x="208" y="24" width="78" height="26" rx="13" fill="#e3f7ec"/>
+      <text x="247" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#1f9d5b">ACCEPT</text>
     </g>
   </g>
 
   <!-- footer -->
-  <text x="640" y="606" text-anchor="middle" font-size="18" fill="#8fa3c8">requirements  →  Claude  →  quality gates  →  test cases you can trust</text>
+  <text x="640" y="606" text-anchor="middle" font-size="18" fill="#8fa3c8">requirements  →  Claude writes  →  static review  →  Excel / Jira Xray</text>
 </svg>

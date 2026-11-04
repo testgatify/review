@@ -1,7 +1,13 @@
-"""Measure a generated test suite and decide PASS / PASS_WITH_WARNINGS / FAIL.
+"""Static review of an AI-written test suite.
 
-Every metric has a threshold. A failing *blocking* gate fails the whole suite,
-the same way one blocker defect stops a release even when most tests pass.
+Nothing is executed against the application: the checks look at the test
+design itself (coverage, traceability, negative tests, completeness,
+duplicates), the way a test manager reviews test cases before they are used.
+
+Verdicts follow the outcome of a review meeting:
+  ACCEPT        every check is within its threshold
+  MINOR_REWORK  only minor checks failed
+  MAJOR_REWORK  at least one major check failed
 """
 
 from __future__ import annotations
@@ -13,19 +19,22 @@ from typing import Any, Callable
 
 from .models import Priority, RequirementSet, TestCase, TestSuite, TestType
 
-PASS = "PASS"
-PASS_WITH_WARNINGS = "PASS_WITH_WARNINGS"
-FAIL = "FAIL"
+ACCEPT = "ACCEPT"
+MINOR_REWORK = "MINOR_REWORK"
+MAJOR_REWORK = "MAJOR_REWORK"
+
+MAJOR = "major"
+MINOR = "minor"
 
 
 @dataclass
-class MetricResult:
+class CheckResult:
     name: str
     description: str
     value: float
     threshold: float
     direction: str  # "min" (value must be >= threshold) or "max" (value must be <= threshold)
-    blocking: bool
+    severity: str  # "major" or "minor"
     findings: list[str] = field(default_factory=list)
 
     @property
@@ -36,19 +45,20 @@ class MetricResult:
 
 
 @dataclass
-class GateReport:
+class ReviewReport:
     application: str
     total_requirements: int
     total_test_cases: int
-    results: list[MetricResult]
+    results: list[CheckResult]
 
     @property
     def verdict(self) -> str:
-        if any(r.blocking and not r.passed for r in self.results):
-            return FAIL
-        if any(not r.passed for r in self.results):
-            return PASS_WITH_WARNINGS
-        return PASS
+        failed = [r for r in self.results if not r.passed]
+        if any(r.severity == MAJOR for r in failed):
+            return MAJOR_REWORK
+        if failed:
+            return MINOR_REWORK
+        return ACCEPT
 
 
 def _ratio(part: int, whole: int) -> float:
@@ -92,16 +102,19 @@ def high_priority_negative_coverage(
 
 def step_completeness(reqs: RequirementSet, suite: TestSuite) -> tuple[float, list[str]]:
     findings = []
+    incomplete: set[str] = set()
     for tc in suite.test_cases:
         if not tc.steps:
             findings.append(f"{tc.id} has no steps")
+            incomplete.add(tc.id)
             continue
         for number, step in enumerate(tc.steps, start=1):
             if not step.action.strip():
                 findings.append(f"{tc.id} step {number} has no action")
+                incomplete.add(tc.id)
             if not step.expected.strip():
                 findings.append(f"{tc.id} step {number} has no expected result")
-    incomplete = {f.split(" ", 1)[0] for f in findings}
+                incomplete.add(tc.id)
     return _ratio(len(suite.test_cases) - len(incomplete), len(suite.test_cases)), findings
 
 
@@ -143,7 +156,7 @@ DESCRIPTIONS = {
 }
 
 
-def evaluate(reqs: RequirementSet, suite: TestSuite, config: dict[str, Any]) -> GateReport:
+def review(reqs: RequirementSet, suite: TestSuite, config: dict[str, Any]) -> ReviewReport:
     metrics: dict[str, Callable[..., tuple[float, list[str]]]] = {
         "requirement_coverage": requirement_coverage,
         "traceability": traceability,
@@ -154,26 +167,29 @@ def evaluate(reqs: RequirementSet, suite: TestSuite, config: dict[str, Any]) -> 
     }
 
     results = []
-    for name, gate in config["gates"].items():
+    for name, check in config["checks"].items():
         if name not in metrics:
-            raise ValueError(f"Unknown quality gate in config: {name}")
-        if ("min" in gate) == ("max" in gate):
-            raise ValueError(f"Gate {name} must set exactly one of 'min' or 'max'")
-        direction = "min" if "min" in gate else "max"
+            raise ValueError(f"Unknown review check in config: {name}")
+        if ("min" in check) == ("max" in check):
+            raise ValueError(f"Check {name} must set exactly one of 'min' or 'max'")
+        severity = check.get("severity", MINOR)
+        if severity not in (MAJOR, MINOR):
+            raise ValueError(f"Check {name} has severity {severity!r}; use 'major' or 'minor'")
+        direction = "min" if "min" in check else "max"
         value, findings = metrics[name](reqs, suite)
         results.append(
-            MetricResult(
+            CheckResult(
                 name=name,
                 description=DESCRIPTIONS[name],
                 value=value,
-                threshold=float(gate[direction]),
+                threshold=float(check[direction]),
                 direction=direction,
-                blocking=bool(gate.get("blocking", False)),
+                severity=severity,
                 findings=findings,
             )
         )
 
-    return GateReport(
+    return ReviewReport(
         application=suite.application,
         total_requirements=len(reqs.requirements),
         total_test_cases=len(suite.test_cases),

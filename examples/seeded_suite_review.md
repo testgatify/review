@@ -1,28 +1,28 @@
-# Quality Gate Report: SauceDemo
+# Test Design Review: SauceDemo
 
-**Verdict: ❌ FAIL**
+**Verdict: ⛔ MAJOR REWORK**: Do not use these test cases yet: fix the major findings below and review again.
 
-18 test cases for 13 requirements.
+18 test cases for 13 requirements. This is a static review of the test design; no tests were executed against the application.
 
-## Gates
+## Review checks
 
-| Gate | Value | Threshold | Blocking | Status |
+| Check | Value | Threshold | Severity | Result |
 |---|---|---|---|---|
-| Requirements covered by at least one test | 92% | ≥ 100% | yes | ❌ fail |
-| Tests that reference only existing requirements | 94% | ≥ 100% | yes | ❌ fail |
-| High-priority requirements with a negative/boundary test | 62% | ≥ 100% | yes | ❌ fail |
-| Tests whose steps all have an action and an expected result | 100% | ≥ 95% | yes | ✅ pass |
-| Share of negative and boundary tests | 39% | ≥ 25% | no | ✅ pass |
-| Share of tests that are near-duplicates | 11% | ≤ 5% | no | ⚠️ warning |
+| Requirements covered by at least one test | 92% | ≥ 100% | major | ⛔ major finding |
+| Tests that reference only existing requirements | 94% | ≥ 100% | major | ⛔ major finding |
+| High-priority requirements with a negative/boundary test | 62% | ≥ 100% | major | ⛔ major finding |
+| Tests whose steps all have an action and an expected result | 100% | ≥ 95% | major | ✅ ok |
+| Share of negative and boundary tests | 39% | ≥ 25% | minor | ✅ ok |
+| Share of tests that are near-duplicates | 11% | ≤ 5% | minor | 🛠️ minor finding |
 
 ## Findings
 
-- **requirement_coverage**: REQ-NAV-01 has no test case
-- **traceability**: TC-016 references unknown requirement(s): REQ-CART-99
-- **high_priority_negative_coverage**: REQ-INV-01 (high priority) has no negative or boundary test
-- **high_priority_negative_coverage**: REQ-CHK-02 (high priority) has no negative or boundary test
-- **high_priority_negative_coverage**: REQ-CHK-03 (high priority) has no negative or boundary test
-- **duplicate_rate**: TC-001 and TC-002 are 93% similar
+- **major** (requirement_coverage): REQ-NAV-01 has no test case
+- **major** (traceability): TC-016 references unknown requirement(s): REQ-CART-99
+- **major** (high_priority_negative_coverage): REQ-INV-01 (high priority) has no negative or boundary test
+- **major** (high_priority_negative_coverage): REQ-CHK-02 (high priority) has no negative or boundary test
+- **major** (high_priority_negative_coverage): REQ-CHK-03 (high priority) has no negative or boundary test
+- **minor** (duplicate_rate): TC-001 and TC-002 are 93% similar
 
 ## Traceability matrix
 
