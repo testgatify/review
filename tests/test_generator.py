@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ai_test_dragon.generator import (
+from testgatify_review.generator import (
     DEFAULT_MODEL,
     TEST_SUITE_SCHEMA,
     GenerationError,

@@ -3,9 +3,9 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ai-test-dragon"
-version = "0.2.0"
-description = "Claude writes test scenarios from requirements; a static review checks them before you use them."
+name = "testgatify-review"
+version = "0.3.0"
+description = "AI writes your test scenarios. The gate decides if they're ready."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -20,6 +20,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+
+[project.scripts]
+testgatify-review = "testgatify_review.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/testgatify/review"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from ai_test_dragon.loader import load_requirements, load_review_config
-from ai_test_dragon.models import RequirementSet, TestCase, TestStep, TestSuite
+from testgatify_review.loader import load_requirements, load_review_config
+from testgatify_review.models import RequirementSet, TestCase, TestStep, TestSuite
 
 ROOT = Path(__file__).resolve().parents[1]
 

@@ -1,26 +1,28 @@
-# AI Test Dragon
+# TestGatify Review
 
-[![tests](https://github.com/tulayguclu/ai-test-dragon/actions/workflows/tests.yml/badge.svg)](https://github.com/tulayguclu/ai-test-dragon/actions/workflows/tests.yml)
+[![tests](https://github.com/testgatify/review/actions/workflows/tests.yml/badge.svg)](https://github.com/testgatify/review/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
 
-![A friendly QA dragon turns requirements into test scenarios with its magic fire; the scenarios pass a static review and come out accepted](docs/banner.png)
+![The TestGatify dragon guards the gate: requirements go into its magic fire, test scenarios come out and pass a static review](docs/banner.png)
 
-**AI writes test scenarios from your requirements. A static review checks them before you use them.**
+**AI writes your test scenarios. The gate decides if they're ready.**
 
-Writing test scenarios by hand is slow. LLMs can draft them in seconds, but a draft can skip a requirement, cite one that doesn't exist, test only the happy path or repeat itself. AI Test Dragon does both jobs a test team needs:
+*Part of [TestGatify](https://github.com/testgatify): don't just generate tests, gatify them.*
+
+Writing test scenarios by hand is slow. LLMs can draft them in seconds, but a draft can skip a requirement, cite one that doesn't exist, test only the happy path or repeat itself. TestGatify Review does both jobs a test team needs:
 
 1. **Write.** Claude turns a requirements file into structured test scenarios: steps, expected results, priority, and links back to the requirements.
-2. **Review.** The scenarios go through a **static review**, the same checks a test manager makes in a review meeting, and get a verdict: **ACCEPT**, **MINOR REWORK** or **MAJOR REWORK**.
+2. **Gate.** The scenarios go through a **static review**, the same checks a test manager makes in a review meeting, and get a verdict: **ACCEPT**, **MINOR REWORK** or **MAJOR REWORK**.
 3. **Export.** The scenarios come out as an **Excel** sheet for people and a **CSV for Jira Xray's Test Case Importer**, ready to load into a test management tool.
 
 ```
-requirements.yaml ──► Claude writes ──► suite.json ──► static review ──► review.md + verdict
+requirements.yaml ──► Claude writes ──► suite.json ──► the gate (static review) ──► review.md + verdict
                                             │
                                             └──► test_cases.xlsx + xray_import.csv
 ```
 
-> **Static, not executed.** The review looks at the test design only (ISTQB: *static testing*). Nothing runs against the application, so the verdict says whether the *scenarios* are ready to use, not whether the *application* works.
+> **Static, not executed.** The gate looks at the test design only (ISTQB: *static testing*). Nothing runs against the application, so the verdict says whether the *scenarios* are ready to use, not whether the *application* works.
 
 ## Review checks
 
@@ -45,16 +47,16 @@ Named after the outcomes of a review meeting:
 | 🛠️ **MINOR REWORK** | Only minor checks failed. Usable after small fixes. |
 | ⛔ **MAJOR REWORK** | At least one major check failed. Fix and review again before use. |
 
-`review` and `run` exit with code `1` on MAJOR REWORK, so the tool can stop a CI pipeline.
+`review` and `run` exit with code `1` on MAJOR REWORK, so the gate can stop a CI pipeline.
 
 ## Example
 
-[`examples/seeded_suite_with_defects.json`](examples/seeded_suite_with_defects.json) holds 18 scenarios for [SauceDemo](https://www.saucedemo.com), a public practice shop. **They are hand-written, not model output**, and seeded with three known defects to show what the review catches: a requirement with no scenario, a link to a non-existent requirement, and a duplicated scenario.
+[`examples/seeded_suite_with_defects.json`](examples/seeded_suite_with_defects.json) holds 18 scenarios for [SauceDemo](https://www.saucedemo.com), a public practice shop. **They are hand-written, not model output**, and seeded with three known defects to show what the gate catches: a requirement with no scenario, a link to a non-existent requirement, and a duplicated scenario.
 
 ```
-$ python -m ai_test_dragon review --requirements requirements/saucedemo.yaml \
+$ testgatify-review review --requirements requirements/saucedemo.yaml \
       --suite examples/seeded_suite_with_defects.json --report examples/seeded_suite_review.md
-Static review of the test design (nothing is executed):
+At the gate: static review of the test design (nothing is executed).
   [MAJOR] requirement_coverage: 92%
   [MAJOR] traceability: 94%
   [MAJOR] high_priority_negative_coverage: 62%
@@ -89,7 +91,7 @@ The requirement IDs in this example (`REQ-LOGIN-01`, ...) are not Jira keys. To 
 
 ## Quick start
 
-Requires Python 3.10+. Writing scenarios needs an [Anthropic API key](https://console.anthropic.com/); review and export work offline.
+Requires Python 3.10+. Writing scenarios needs an [Anthropic API key](https://console.anthropic.com/); the review and export work offline.
 
 ```bash
 python -m venv .venv
@@ -99,12 +101,12 @@ pip install -e ".[dev]"
 export ANTHROPIC_API_KEY=...       # Windows PowerShell: $env:ANTHROPIC_API_KEY="..."
 
 # Write, review and export in one go (results in output/)
-python -m ai_test_dragon run --requirements requirements/saucedemo.yaml
+testgatify-review run --requirements requirements/saucedemo.yaml
 
 # Or step by step
-python -m ai_test_dragon generate --requirements requirements/saucedemo.yaml --out output/suite.json
-python -m ai_test_dragon review   --requirements requirements/saucedemo.yaml --suite output/suite.json
-python -m ai_test_dragon export   --suite output/suite.json
+testgatify-review generate --requirements requirements/saucedemo.yaml --out output/suite.json
+testgatify-review review   --requirements requirements/saucedemo.yaml --suite output/suite.json
+testgatify-review export   --suite output/suite.json
 ```
 
 Run the tool's own tests (no API key needed):
@@ -116,8 +118,8 @@ pytest
 ## Design decisions
 
 - **Structured output, not free text.** Claude answers against a strict JSON schema, so every scenario has the same fields and can be checked by code and exported.
-- **Deterministic review.** The checks are plain code, not another LLM call: cheap, reproducible and safe in CI. The model never grades its own work.
-- **The prompt and the review mirror each other.** Every rule given to Claude ("cover every requirement", "only cite existing IDs", "add a negative test for high-priority requirements") has a check that verifies it was followed.
+- **Deterministic gate.** The checks are plain code, not another LLM call: cheap, reproducible and safe in CI. The model never grades its own work.
+- **The prompt and the gate mirror each other.** Every rule given to Claude ("cover every requirement", "only cite existing IDs", "add a negative test for high-priority requirements") has a check that verifies it was followed.
 - **Major vs. minor findings.** The same call a test manager makes in a review: some findings send the work back, others are noted.
 - **Usable output.** Excel for people, Xray CSV for the test management tool, so accepted scenarios don't have to be retyped.
 - **Testable without the API.** The writer is tested with a fake client, so the 24 tests run offline and in CI.
@@ -128,14 +130,14 @@ pytest
 ```
 requirements/saucedemo.yaml       Input: requirements for the demo app
 config/review_checks.yaml         Check thresholds and severities
-src/ai_test_dragon/
+src/testgatify_review/
   generator.py                    Claude writes the scenarios (JSON schema)
-  review_checks.py                Static review and verdict
+  review_checks.py                The gate: static review and verdict
   report.py                       Markdown review report
   export.py                       Excel and Xray CSV export
   cli.py                          generate / review / export / run
 examples/                         Seeded suite, its review and exports
-docs/banner.svg                   Project illustration (source)
+docs/                             Banner and logo (SVG sources)
 tests/                            pytest suite (runs offline)
 ```
 
@@ -147,7 +149,7 @@ tests/                            pytest suite (runs offline)
 
 ## About
 
-Built by **Tülay Güçlü**, a QA lead with 14+ years in defence, public-sector and telecom projects, now focused on AI-augmented testing.
+Built by **[Tülay Güçlü](https://github.com/tulayguclu)**, a QA lead with 14+ years in defence, public-sector and telecom projects, now focused on AI-augmented testing.
 [LinkedIn](https://www.linkedin.com/in/tulayguclu/)
 
 ## License

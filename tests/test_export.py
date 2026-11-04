@@ -4,8 +4,8 @@ import csv
 
 from openpyxl import load_workbook
 
-from ai_test_dragon.export import EXCEL_HEADERS, XRAY_HEADERS, to_excel, to_xray_csv
-from ai_test_dragon.loader import load_suite
+from testgatify_review.export import EXCEL_HEADERS, XRAY_HEADERS, to_excel, to_xray_csv
+from testgatify_review.loader import load_suite
 
 
 def seeded(root):

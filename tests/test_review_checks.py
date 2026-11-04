@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from ai_test_dragon.loader import load_suite
-from ai_test_dragon.review_checks import ACCEPT, MAJOR_REWORK, MINOR_REWORK, review
+from testgatify_review.loader import load_suite
+from testgatify_review.review_checks import ACCEPT, MAJOR_REWORK, MINOR_REWORK, review
 
 from .conftest import make_case
 

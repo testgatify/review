@@ -1,9 +1,11 @@
-"""Command-line interface.
+"""Command-line interface for TestGatify Review.
 
-    python -m ai_test_dragon generate --requirements requirements/saucedemo.yaml
-    python -m ai_test_dragon review   --requirements requirements/saucedemo.yaml --suite output/suite.json
-    python -m ai_test_dragon export   --suite output/suite.json
-    python -m ai_test_dragon run      --requirements requirements/saucedemo.yaml
+    testgatify-review generate --requirements requirements/saucedemo.yaml
+    testgatify-review review   --requirements requirements/saucedemo.yaml --suite output/suite.json
+    testgatify-review export   --suite output/suite.json
+    testgatify-review run      --requirements requirements/saucedemo.yaml
+
+(`python -m testgatify_review ...` works too.)
 
 `review` and `run` exit with code 1 when the verdict is MAJOR_REWORK, so they
 can stop a CI pipeline.
@@ -28,7 +30,7 @@ DEFAULT_CONFIG = "config/review_checks.yaml"
 
 
 def _generate(args: argparse.Namespace, reqs: RequirementSet) -> TestSuite:
-    print(f"Writing test cases for {len(reqs.requirements)} requirements with {args.model}...")
+    print(f"Gatifying... Claude is writing test scenarios for {len(reqs.requirements)} requirements ({args.model}).")
     try:
         suite = generate_test_suite(reqs, model=args.model, effort=args.effort)
     except anthropic.AuthenticationError:
@@ -50,7 +52,7 @@ def _review(args: argparse.Namespace, reqs: RequirementSet, suite: TestSuite) ->
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(render_markdown(report, reqs, suite), encoding="utf-8")
 
-    print("Static review of the test design (nothing is executed):")
+    print("At the gate: static review of the test design (nothing is executed).")
     for r in report.results:
         status = "  ok " if r.passed else r.severity.upper()
         print(f"  [{status:>5}] {r.name}: {r.value:.0%}")
@@ -65,8 +67,8 @@ def _export(args: argparse.Namespace, suite: TestSuite) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog="ai_test_dragon",
-        description="Claude writes test scenarios from requirements; a static review checks them.",
+        prog="testgatify-review",
+        description="TestGatify Review: AI writes your test scenarios. The gate decides if they're ready.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

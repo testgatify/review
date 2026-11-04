@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from ai_test_dragon.cli import main
-from ai_test_dragon.models import RequirementSet
+from testgatify_review.cli import main
+from testgatify_review.models import RequirementSet
 
 
 def test_review_exits_1_on_major_rework_and_writes_report(root, tmp_path):
