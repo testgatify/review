@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
 
-![The TestGatify dragon guards the gate: requirements go into its magic fire, test scenarios come out and pass a static review](docs/banner.png)
+![TestGatify Review: AI writes your test scenarios. The gate decides if they're ready. Verdicts: ACCEPT, MINOR REWORK, MAJOR REWORK](docs/banner.png)
 
 **AI writes your test scenarios. The gate decides if they're ready.**
 
@@ -137,7 +137,7 @@ src/testgatify_review/
   export.py                       Excel and Xray CSV export
   cli.py                          generate / review / export / run
 examples/                         Seeded suite, its review and exports
-docs/                             Banner and logo (SVG sources)
+docs/                             Banner (HTML source + PNG) and the TG mark
 tests/                            pytest suite (runs offline)
 ```
 

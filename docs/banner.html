@@ -1,0 +1,46 @@
+<!doctype html>
+<!-- Source of docs/banner.png (1280x640). Render: open in a browser at 1280x640 and take a screenshot. -->
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #030B21; --teal: #02CBC2; --ink: #C9D3E6; --muted: #7F8BA6; }
+  html, body { margin: 0; padding: 0; }
+  body { width: 1280px; height: 640px; background: var(--navy); font-family: 'Montserrat', 'Segoe UI', sans-serif; overflow: hidden; position: relative; }
+  .glow { position: absolute; width: 800px; height: 800px; left: -170px; top: -80px;
+          background: radial-gradient(circle, rgba(2,203,194,0.10) 0%, rgba(2,203,194,0) 62%); }
+  .mark { position: absolute; left: 100px; top: 200px; height: 230px; }
+  .divider { position: absolute; left: 555px; top: 150px; width: 3px; height: 326px; background: var(--teal); opacity: 0.55; border-radius: 2px; }
+  .text { position: absolute; left: 610px; top: 130px; right: 56px; }
+  .brand { color: var(--teal); font-weight: 700; font-size: 25px; letter-spacing: 7px; }
+  .product { color: #fff; font-weight: 800; font-size: 110px; line-height: 1; margin: 6px 0 22px -4px; letter-spacing: -1px; }
+  .slogan { color: var(--ink); font-weight: 500; font-size: 30px; line-height: 1.38; }
+  .slogan b { color: #fff; font-weight: 700; }
+  .slogan .gate { color: var(--teal); }
+  .chips { margin-top: 30px; display: flex; gap: 12px; }
+  .chip { font-weight: 700; font-size: 17px; letter-spacing: 1.5px; padding: 9px 17px; border-radius: 999px; border: 2px solid; }
+  .ok { background: var(--teal); border-color: var(--teal); color: var(--navy); }
+  .minor { color: #F4C35A; border-color: rgba(244,195,90,0.7); }
+  .major { color: #FF7A7A; border-color: rgba(255,122,122,0.7); }
+  .footer { position: absolute; left: 100px; bottom: 46px; color: var(--muted); font-weight: 500; font-size: 20px; letter-spacing: 0.5px; }
+  .footer span { color: var(--teal); }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <img class="mark" src="tg_mark.png" alt="TG">
+  <div class="divider"></div>
+  <div class="text">
+    <div class="brand">TESTGATIFY</div>
+    <div class="product">Review</div>
+    <div class="slogan">AI writes your test scenarios.<br><b>The <span class="gate">gate</span> decides if they're ready.</b></div>
+    <div class="chips">
+      <div class="chip ok">ACCEPT</div>
+      <div class="chip minor">MINOR REWORK</div>
+      <div class="chip major">MAJOR REWORK</div>
+    </div>
+  </div>
+  <div class="footer">github.com/<span>testgatify</span>/review</div>
+</body>
+</html>
