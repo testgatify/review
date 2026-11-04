@@ -1,0 +1,214 @@
+{
+  "application": "SauceDemo",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "title": "Login with valid credentials",
+      "requirement_ids": ["REQ-LOGIN-01"],
+      "type": "positive",
+      "priority": "high",
+      "preconditions": ["The browser is open"],
+      "steps": [
+        {"action": "Open https://www.saucedemo.com", "expected": "The login page with Username and Password fields is shown"},
+        {"action": "Enter standard_user / secret_sauce and click Login", "expected": "The Products page is shown"}
+      ]
+    },
+    {
+      "id": "TC-002",
+      "title": "Login with valid credentials as standard user",
+      "requirement_ids": ["REQ-LOGIN-01"],
+      "type": "positive",
+      "priority": "high",
+      "preconditions": ["The browser is open"],
+      "steps": [
+        {"action": "Open https://www.saucedemo.com", "expected": "The login page is shown"},
+        {"action": "Enter standard_user / secret_sauce and click Login", "expected": "The Products page is shown"}
+      ]
+    },
+    {
+      "id": "TC-003",
+      "title": "Login with a wrong password is rejected",
+      "requirement_ids": ["REQ-LOGIN-01", "REQ-LOGIN-02"],
+      "type": "negative",
+      "priority": "high",
+      "preconditions": ["The login page is open"],
+      "steps": [
+        {"action": "Enter standard_user / wrong_password and click Login", "expected": "The user stays on the login page and sees \"Epic sadface: Username and password do not match any user in this service\""}
+      ]
+    },
+    {
+      "id": "TC-004",
+      "title": "Login with an unknown username is rejected",
+      "requirement_ids": ["REQ-LOGIN-02"],
+      "type": "negative",
+      "priority": "high",
+      "preconditions": ["The login page is open"],
+      "steps": [
+        {"action": "Enter unknown_user / secret_sauce and click Login", "expected": "The user stays on the login page and sees \"Epic sadface: Username and password do not match any user in this service\""}
+      ]
+    },
+    {
+      "id": "TC-005",
+      "title": "Locked-out user cannot log in",
+      "requirement_ids": ["REQ-LOGIN-03"],
+      "type": "negative",
+      "priority": "high",
+      "preconditions": ["The login page is open"],
+      "steps": [
+        {"action": "Enter locked_out_user / secret_sauce and click Login", "expected": "The error \"Epic sadface: Sorry, this user has been locked out.\" is shown and the Products page does not open"}
+      ]
+    },
+    {
+      "id": "TC-006",
+      "title": "Empty username shows a required-field error",
+      "requirement_ids": ["REQ-LOGIN-04"],
+      "type": "boundary",
+      "priority": "medium",
+      "preconditions": ["The login page is open"],
+      "steps": [
+        {"action": "Leave Username empty, enter secret_sauce as the password and click Login", "expected": "The error \"Epic sadface: Username is required\" is shown"}
+      ]
+    },
+    {
+      "id": "TC-007",
+      "title": "Empty password shows a required-field error",
+      "requirement_ids": ["REQ-LOGIN-04"],
+      "type": "boundary",
+      "priority": "medium",
+      "preconditions": ["The login page is open"],
+      "steps": [
+        {"action": "Enter standard_user, leave Password empty and click Login", "expected": "The error \"Epic sadface: Password is required\" is shown"}
+      ]
+    },
+    {
+      "id": "TC-008",
+      "title": "Products page lists six products with full details",
+      "requirement_ids": ["REQ-INV-01"],
+      "type": "positive",
+      "priority": "high",
+      "preconditions": ["Logged in as standard_user"],
+      "steps": [
+        {"action": "Count the products on the Products page", "expected": "Exactly six products are listed"},
+        {"action": "Check each product card", "expected": "Each card shows a name, a description, a price and an \"Add to cart\" button"}
+      ]
+    },
+    {
+      "id": "TC-009",
+      "title": "Sort products by name Z to A",
+      "requirement_ids": ["REQ-INV-02"],
+      "type": "positive",
+      "priority": "medium",
+      "preconditions": ["Logged in as standard_user"],
+      "steps": [
+        {"action": "Check the sort menu without changing it", "expected": "Name (A to Z) is selected and products are in alphabetical order"},
+        {"action": "Choose Name (Z to A)", "expected": "Products are listed in reverse alphabetical order"}
+      ]
+    },
+    {
+      "id": "TC-010",
+      "title": "Sort products by price in both directions",
+      "requirement_ids": ["REQ-INV-02"],
+      "type": "positive",
+      "priority": "medium",
+      "preconditions": ["Logged in as standard_user"],
+      "steps": [
+        {"action": "Choose Price (low to high)", "expected": "Each product's price is greater than or equal to the one before it"},
+        {"action": "Choose Price (high to low)", "expected": "Each product's price is less than or equal to the one before it"}
+      ]
+    },
+    {
+      "id": "TC-011",
+      "title": "Adding a product updates the cart badge and button",
+      "requirement_ids": ["REQ-CART-01"],
+      "type": "positive",
+      "priority": "high",
+      "preconditions": ["Logged in as standard_user", "The cart is empty"],
+      "steps": [
+        {"action": "Click \"Add to cart\" on the first product", "expected": "The cart badge shows 1 and the button changes to \"Remove\""}
+      ]
+    },
+    {
+      "id": "TC-012",
+      "title": "Adding all six products shows 6 on the badge",
+      "requirement_ids": ["REQ-CART-01"],
+      "type": "boundary",
+      "priority": "high",
+      "preconditions": ["Logged in as standard_user", "The cart is empty"],
+      "steps": [
+        {"action": "Click \"Add to cart\" on all six products", "expected": "The cart badge shows 6 and every button reads \"Remove\""}
+      ]
+    },
+    {
+      "id": "TC-013",
+      "title": "Removing a product from the Products page",
+      "requirement_ids": ["REQ-CART-02"],
+      "type": "positive",
+      "priority": "medium",
+      "preconditions": ["Logged in as standard_user", "One product is in the cart"],
+      "steps": [
+        {"action": "Click \"Remove\" on the product in the cart", "expected": "The cart badge disappears and the button reads \"Add to cart\" again"}
+      ]
+    },
+    {
+      "id": "TC-014",
+      "title": "Cart page lists added products",
+      "requirement_ids": ["REQ-CART-03"],
+      "type": "positive",
+      "priority": "medium",
+      "preconditions": ["Logged in as standard_user", "Two products are in the cart"],
+      "steps": [
+        {"action": "Click the cart icon", "expected": "Both products are listed with quantity, name and price"},
+        {"action": "Check the buttons on the page", "expected": "\"Continue Shopping\" and \"Checkout\" buttons are shown"}
+      ]
+    },
+    {
+      "id": "TC-015",
+      "title": "Checkout information fields are required",
+      "requirement_ids": ["REQ-CHK-01"],
+      "type": "negative",
+      "priority": "high",
+      "preconditions": ["Logged in as standard_user", "One product is in the cart", "On \"Checkout: Your Information\""],
+      "steps": [
+        {"action": "Click Continue with all fields empty", "expected": "\"Error: First Name is required\" is shown"},
+        {"action": "Fill First Name only and click Continue", "expected": "\"Error: Last Name is required\" is shown"},
+        {"action": "Fill First Name and Last Name only and click Continue", "expected": "\"Error: Postal Code is required\" is shown"}
+      ]
+    },
+    {
+      "id": "TC-016",
+      "title": "Order overview total equals item total plus tax",
+      "requirement_ids": ["REQ-CHK-02", "REQ-CART-99"],
+      "type": "positive",
+      "priority": "high",
+      "preconditions": ["Logged in as standard_user", "Two products are in the cart"],
+      "steps": [
+        {"action": "Complete \"Checkout: Your Information\" and click Continue", "expected": "\"Checkout: Overview\" lists both products"},
+        {"action": "Compare Item total with the listed prices", "expected": "Item total equals the sum of the two prices"},
+        {"action": "Compare Total with Item total and Tax", "expected": "Total equals Item total + Tax"}
+      ]
+    },
+    {
+      "id": "TC-017",
+      "title": "Finishing an order empties the cart",
+      "requirement_ids": ["REQ-CHK-03"],
+      "type": "positive",
+      "priority": "high",
+      "preconditions": ["Logged in as standard_user", "On \"Checkout: Overview\" with one product"],
+      "steps": [
+        {"action": "Click Finish", "expected": "\"Thank you for your order!\" is shown"},
+        {"action": "Look at the cart icon", "expected": "The cart badge is not shown"}
+      ]
+    },
+    {
+      "id": "TC-018",
+      "title": "Complete checkout information continues to the overview",
+      "requirement_ids": ["REQ-CHK-01"],
+      "type": "positive",
+      "priority": "high",
+      "preconditions": ["Logged in as standard_user", "One product is in the cart", "On \"Checkout: Your Information\""],
+      "steps": [
+        {"action": "Enter Jane / Doe / 12345 and click Continue", "expected": "\"Checkout: Overview\" is shown"}
+      ]
+    }
+  ]
+}

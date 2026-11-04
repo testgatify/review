@@ -1,0 +1,29 @@
+# Quality gates for AI-generated test suites.
+#
+# Like a release gate: every metric has a threshold. A "blocking" gate that
+# fails makes the whole suite FAIL, even if every other metric looks good.
+# A non-blocking gate only produces a warning.
+
+gates:
+  requirement_coverage:          # share of requirements with at least one test
+    min: 1.0
+    blocking: true
+  traceability:                  # share of tests that only reference real requirement IDs
+    min: 1.0
+    blocking: true
+  high_priority_negative_coverage:  # high-priority requirements with a negative/boundary test
+    min: 1.0
+    blocking: true
+  step_completeness:             # tests whose every step has an action and an expected result
+    min: 0.95
+    blocking: true
+  negative_test_ratio:           # share of negative + boundary tests in the suite
+    min: 0.25
+    blocking: false
+  duplicate_rate:                # share of tests that are near-duplicates of another test
+    max: 0.05
+    blocking: false
+
+# Two tests count as near-duplicates when their title + steps are at least
+# this similar (0.0 = nothing in common, 1.0 = identical).
+duplicate_similarity_threshold: 0.9

@@ -1,0 +1,109 @@
+# Requirements for SauceDemo (https://www.saucedemo.com), a public demo
+# e-commerce site that testers use for practice. Written from the site's
+# observable behaviour; the demo accounts below are published on its login page.
+
+application: SauceDemo
+url: https://www.saucedemo.com
+description: >
+  A small online shop. Users log in, browse six products, add them to a cart
+  and complete a three-step checkout. Demo accounts: standard_user,
+  locked_out_user and problem_user, all with the password "secret_sauce".
+
+requirements:
+  - id: REQ-LOGIN-01
+    title: Successful login
+    priority: high
+    description: >
+      A user with valid credentials (standard_user / secret_sauce) who clicks
+      "Login" is taken to the Products (inventory) page.
+
+  - id: REQ-LOGIN-02
+    title: Invalid credentials are rejected
+    priority: high
+    description: >
+      When the username/password pair is wrong, the user stays on the login
+      page and sees "Epic sadface: Username and password do not match any user
+      in this service".
+
+  - id: REQ-LOGIN-03
+    title: Locked-out user cannot log in
+    priority: high
+    description: >
+      locked_out_user cannot log in and sees "Epic sadface: Sorry, this user
+      has been locked out."
+
+  - id: REQ-LOGIN-04
+    title: Required login fields
+    priority: medium
+    description: >
+      With an empty username the error is "Epic sadface: Username is
+      required". With a username but an empty password the error is
+      "Epic sadface: Password is required".
+
+  - id: REQ-INV-01
+    title: Product list
+    priority: high
+    description: >
+      The Products page lists six products. Each shows a name, description,
+      price and an "Add to cart" button.
+
+  - id: REQ-INV-02
+    title: Product sorting
+    priority: medium
+    description: >
+      The sort menu offers Name (A to Z), Name (Z to A), Price (low to high)
+      and Price (high to low). Choosing an option re-orders the list
+      accordingly. The default is Name (A to Z).
+
+  - id: REQ-CART-01
+    title: Add to cart
+    priority: high
+    description: >
+      Clicking "Add to cart" increases the number on the cart badge by one
+      and changes that product's button to "Remove".
+
+  - id: REQ-CART-02
+    title: Remove from cart
+    priority: medium
+    description: >
+      Clicking "Remove" (on the Products page or the cart page) decreases the
+      cart badge by one. When the cart is empty the badge is not shown.
+
+  - id: REQ-CART-03
+    title: Cart page
+    priority: medium
+    description: >
+      The cart page lists each added product with its quantity, name and
+      price, and offers "Continue Shopping" and "Checkout" buttons.
+
+  - id: REQ-CHK-01
+    title: Checkout information is required
+    priority: high
+    description: >
+      On "Checkout: Your Information", First Name, Last Name and Zip/Postal
+      Code are required. Continuing with an empty field shows
+      "Error: First Name is required", "Error: Last Name is required" or
+      "Error: Postal Code is required" respectively.
+
+  - id: REQ-CHK-02
+    title: Order overview totals
+    priority: high
+    description: >
+      "Checkout: Overview" lists the items and shows Item total, Tax and
+      Total, where Total = Item total + Tax and Item total is the sum of the
+      listed item prices.
+
+  - id: REQ-CHK-03
+    title: Order completion
+    priority: high
+    description: >
+      Clicking "Finish" shows "Thank you for your order!" and empties the
+      cart (the cart badge disappears).
+
+  - id: REQ-NAV-01
+    title: Logout and protected pages
+    priority: medium
+    description: >
+      "Logout" in the side menu returns the user to the login page. Opening
+      the inventory URL directly without logging in shows the login page
+      with an error instead of the products.
