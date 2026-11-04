@@ -1,5 +1,9 @@
 # AI Test Dragon
 
+[![tests](https://github.com/tulayguclu/ai-test-dragon/actions/workflows/tests.yml/badge.svg)](https://github.com/tulayguclu/ai-test-dragon/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+
 ![A friendly QA dragon turns requirements into test scenarios with its magic fire; the scenarios pass a static review and come out accepted](docs/banner.png)
 
 **AI writes test scenarios from your requirements. A static review checks them before you use them.**
@@ -145,3 +149,7 @@ tests/                            pytest suite (runs offline)
 
 Built by **Tülay Güçlü**, a QA lead with 14+ years in defence, public-sector and telecom projects, now focused on AI-augmented testing.
 [LinkedIn](https://www.linkedin.com/in/tulayguclu/)
+
+## License
+
+[MIT](LICENSE)

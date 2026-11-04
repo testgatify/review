@@ -8,6 +8,7 @@ version = "0.2.0"
 description = "Claude writes test scenarios from requirements; a static review checks them before you use them."
 readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
 authors = [{ name = "Tülay Güçlü" }]
 dependencies = [
     "anthropic>=2.4",
