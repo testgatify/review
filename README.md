@@ -1,5 +1,7 @@
 # AI Test Designer
 
+![A friendly QA dragon turns requirements into test cases with its magic fire; the test cases pass through a quality gate](docs/banner.png)
+
 **Generate manual test cases from requirements with Claude, then check them with quality gates before anyone trusts them.**
 
 LLMs can draft a test suite in seconds, but the output can't be accepted blindly. It may skip a requirement, cite one that doesn't exist, repeat itself, or write steps nobody can verify. This tool treats AI-generated tests like a release candidate: it **measures** them, applies **quality gates**, and returns a **verdict**.
