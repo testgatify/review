@@ -8,7 +8,9 @@
 
 **AI writes your test scenarios. The gate decides if they're ready.**
 
-*Part of [TestGatify](https://github.com/testgatify): don't just generate tests, gatify them.*
+*Part of [TestGatify](https://github.com/testgatify) — Independent AI Testing & Evaluation.*
+
+*Don't just generate tests. Gatify them.*
 
 Writing test scenarios by hand is slow. LLMs can draft them in seconds, but a draft can skip a requirement, cite one that doesn't exist, test only the happy path or repeat itself. TestGatify Review does both jobs a test team needs:
 
@@ -22,7 +24,7 @@ requirements.yaml ──► Claude writes ──► suite.json ──► the gat
                                             └──► test_cases.xlsx + xray_import.csv
 ```
 
-> **Static, not executed.** The gate looks at the test design only (ISTQB: *static testing*). Nothing runs against the application, so the verdict says whether the *scenarios* are ready to use, not whether the *application* works.
+> **Static, not executed.** The gate looks at the test design only (ISTQB: *static testing*). Nothing runs against the application, so the verdict says whether the *scenarios* are ready to use, not whether the *application* works. It is not a runtime evaluation of an AI system; the gate does not measure LLM factual correctness, RAG grounding or agent task success.
 
 ## Review checks
 
@@ -141,7 +143,19 @@ docs/                             Banner (HTML source + PNG) and the TG mark
 tests/                            pytest suite (runs offline)
 ```
 
+## Brand and product boundaries
+
+[TestGatify](https://github.com/testgatify) is the broader **Independent AI Testing & Evaluation** brand. This repository contains **TestGatify Review**, the existing open-source scenario-generation and static-review product.
+
+- **TestGatify Operations** is a separate private management panel; private records and planning documents do not belong in this repository.
+- **TestGatify Website** is a planned corporate website and portfolio, not an existing product here.
+- **LLM, RAG and Agent Evaluation tools** are future work; Review does not claim runtime AI evaluation results.
+
+Codex and Claude Code share the public instructions in [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md). The GitHub repository is `testgatify/review`, while the Python package/CLI name is `testgatify-review`.
+
 ## Roadmap
+
+The following extensions are planned, not current capabilities:
 
 - A real Claude run on the SauceDemo requirements, committed as an example
 - LLM-as-judge for qualities code can't measure (clarity, realistic test data), reported next to the static checks
