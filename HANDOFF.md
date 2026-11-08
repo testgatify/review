@@ -19,3 +19,6 @@ Before implementing a feature, confirm the task belongs to **Review** rather tha
 - What is still open / exact next action
 
 Never copy private plans, employer/client records, secrets or operational data here. Keep durable progress in Git commits/PRs; local or chat-only context is not shared across tools or computers.
+## 2026-11-08 — Local synchronization rule
+- Added the safe Git start and handoff routine to the shared agent instructions; no product code or public claims changed.
+- Verification: reviewed the document diff and Git status. Next: review and merge this documentation PR when appropriate.
