@@ -1,6 +1,6 @@
 # TestGatify Review — shared contributor and agent instructions
 
-These public instructions apply to Codex, Claude Code and human contributors. Read this file, `README.md`, `pyproject.toml`, and the relevant code/tests before editing. `CLAUDE.md` imports these same rules; no private document or chat history is required.
+These public instructions apply to Codex, Claude Code and human contributors. Read this file, `HANDOFF.md`, `README.md`, `pyproject.toml`, and the relevant code/tests before editing. `CLAUDE.md` imports these same rules; no private document or chat history is required.
 
 ## Brand and product scope
 
@@ -18,7 +18,7 @@ These public instructions apply to Codex, Claude Code and human contributors. Re
 4. Document present behavior separately from proposals. Do not invent model results, benchmarks, customers or certifications. Keep seeded examples clearly labeled as hand-written fixtures.
 5. Do not make paid model calls or generate live model examples unless the user explicitly requests that action. Default verification is offline; generator tests use a fake client.
 6. Run the existing test suite after changes, and report the exact results or blockers. Keep application execution and model evaluation out of static-gate claims.
-7. In the PR, summarize changes, tests, limitations and next steps so another agent can continue. Chat memories and other repositories do not synchronize automatically. Carry across only public-safe decisions explicitly relevant to this product.
+7. At the end of each meaningful task, update `HANDOFF.md` with changes, tests, the PR/branch and the exact next step. In the PR, summarize changes, tests, limitations and next steps so another agent can continue. Chat memories and other repositories do not synchronize automatically. Carry across only public-safe decisions explicitly relevant to this product.
 
 ## Local verification
 
